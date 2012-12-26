@@ -9,22 +9,50 @@ public class Parser {
 	private Tree tree = new Tree();
 	
 	public Parser(List<Token> tokens) {
-		tree.add(getExpression(tokens));
+		tree.add(getRootNode(tokens));
+	}
+	
+	private Node getRootNode(List<Token> tokens) {
+		if (isNumber(tokens)) {
+			return new Number(getNumber(tokens)); 
+		} else {
+			return getExpression(tokens);
+		}
+			
 	}
 
 	private Node getExpression(List<Token> tokens) {
+		if (tokens.get(0).getType() == TokenType.PAREN_OPEN && tokens.get(tokens.size() - 1).getType() == TokenType.PAREN_CLOSE) {
+			return getExpression(tokens.subList(1, tokens.size() - 1));
+		}
 		if (isNumber(tokens)) {
-			return new Number(getNumber(tokens));
-		}
-		Node expr = null;
-//		getFirstExpression(tokens);
-		if (!tokens.get(0).isNumber()) {
-			expr = getExpression(tokens);	
+			return new Number(getNumber(tokens)); 
+		} 
+		int pos = getFirstOperatorPos(tokens);
+		return new Expression(getExpression(tokens.subList(0, pos)), new Operator(tokens.get(pos)), getExpression(tokens.subList(pos + 1, tokens.size())));
+	}
+
+
+	private int getFirstOperatorPos(List<Token> tokens) {
+		if (tokens.get(1).getType() == TokenType.OPERATOR) {
+			return 1;
 		} else {
-			expr = new Number(getNumber((tokens)));
+			if (tokens.get(0).getType() == TokenType.PAREN_OPEN) {
+				return 1 + posLastParenthese(tokens);
+			}
 		}
-		
-		return null;
+		throw new CalculatorException("Not implemented yet");
+	}
+
+
+	private int posLastParenthese(List<Token> tokens) {
+		int pos = 0;
+		for (int i = 0; i < tokens.size(); i++) {
+			if (tokens.get(i).getType() == TokenType.PAREN_CLOSE) {
+				pos = i;
+			}
+		}
+		return pos;
 	}
 
 	private boolean isExpression(List<Token> tokens) {

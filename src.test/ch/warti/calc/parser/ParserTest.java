@@ -22,13 +22,27 @@ public class ParserTest {
 	
 	@Test
 	public void testSimpleAddition() {
-		Parser parser = new Parser(new Lexer("1 + 1").getTokens());
-		assertEquals("1.0 + 1.0", parser.getTree().getNodes().get(0).toString());
+		Parser parser = new Parser(new Lexer("1 + 2").getTokens());
+		assertEquals("(1.0 + 2.0)", parser.getTree().getNodes().get(0).toString());
+	}
+
+	@Test
+	public void testSimpleAdditionParenthese() {
+		Parser parser = new Parser(new Lexer("(1) + 2").getTokens());
+		assertEquals("(1.0 + 2.0)", parser.getTree().getNodes().get(0).toString());
+	}
+	
+ 
+	@Test
+	public void testMultipleParentheseAdditionParenthese() {
+		Parser parser = new Parser(new Lexer("((1) + 2)").getTokens());
+		assertEquals("(1.0 + 2.0)", parser.getTree().getNodes().get(0).toString());
 	}
 	
 	@Test
-	public void testSimpleAdditionParenthese() {
-		Parser parser = new Parser(new Lexer("(1) + 1").getTokens());
-		assertEquals("1.0 + 1.0", parser.getTree().getNodes().get(0).toString());
+	public void testComplicated() {
+		Parser parser = new Parser(new Lexer("((1 - 2 ) + 2)").getTokens());
+		assertEquals("((1.0 - 2.0) + 2.0)", parser.getTree().getNodes().get(0).toString());
 	}
+	
 }

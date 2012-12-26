@@ -1,17 +1,19 @@
 package ch.warti.calc.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Expression implements Node {
 
-	
-	
-	private Number number;
+	private Node expression;
 	private Operator operator;
-	private Number number2;
-
-	public Expression(Number number, Operator operator, Number number2) {
-		this.number = number;
-		this.operator = operator;
-		this.number2 = number2;
+	private Node expression2;
+	private List<Expression> childExpression = new ArrayList<Expression>();
+	
+	public Expression(Node expr, Operator operator, Node expr2) {
+		this.expression = expr;
+		this.operator = operator; 
+		this.expression2 = expr2;
 	}
 
 	@Override
@@ -21,6 +23,6 @@ public class Expression implements Node {
 	
 	@Override
 	public String toString() {
-		return number.getValue() + " " + operator.getValue() + " " + number2.getValue();
+		return "(" + expression.getValue() + " " + operator.getValue() + " " + expression2.getValue() + ")";
 	}
 }
