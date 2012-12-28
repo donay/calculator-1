@@ -96,6 +96,8 @@ public class Lexer {
 	}
 	
 	private void operator() {
+		if (currentChar==':') currentChar='/';
+		
 		accumulator.append(currentChar);
 		addToken(TokenType.OPERATOR);
 		inputState++;
@@ -136,7 +138,7 @@ public class Lexer {
 	}
 
 	private boolean isOperator(char c) {
-		return (c == '+' || c == '-' || c == '*' || c == ':');
+		return (c == '+' || c == '-' || c == '*' || c == ':' || c == '/');
 	}
 
 	private boolean isParenthese(char c) {
